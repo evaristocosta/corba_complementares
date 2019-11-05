@@ -1,0 +1,22 @@
+module ComplementaresApp
+{
+    enum CategoriaComplementares { cultural, palestra, curso, externa };
+    
+    struct AtividadeComplementar {
+        long RA;
+        string descricao;
+        CategoriaComplementares categoria;
+        long numeroHoras;
+        string urlCertificado;
+    };
+    
+    typedef sequence<AtividadeComplementar> AtividadesComplementares;
+    interface DepositoAtividades
+    {
+        boolean cadastrarAtividade(in AtividadeComplementar at);
+        long contarHorasCadastradas(in long RA);
+        AtividadesComplementares atividadesCadastradas(in long RA);
+        void removerTodas();
+        boolean removerAtividade(in AtividadeComplementar at);
+    };
+};
