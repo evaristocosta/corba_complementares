@@ -20,3 +20,13 @@ class complementares_impl : virtual public POA_ComplementaresApp, public Portabl
         ::ComplementaresApp::AtividadesComplementares* listaAtividades;
         int qtdeAtividades;
 };
+
+inline ::CORBA::Boolean complementares_impl::cadastrarAtividade(const ::ComplementaresApp::AtividadeComplementar &at) {
+    if (qtdeAtividades == listaAtividades->length()) {
+        return false;
+    } else {
+        (*listaAtividades)[qtdeAtividades] = at;
+        qtdeAtividades++;
+        return true;
+    }
+}
