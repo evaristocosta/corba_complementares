@@ -266,7 +266,6 @@ _CORBA_MODULE_BEG
     ::CORBA::Boolean cadastrarAtividade(const ::ComplementaresApp::AtividadeComplementar& at);
     ::CORBA::Long contarHorasCadastradas(::CORBA::Long RA);
     AtividadesComplementares* atividadesCadastradas(::CORBA::Long RA);
-    void removerTodas();
     ::CORBA::Boolean removerAtividade(const ::ComplementaresApp::AtividadeComplementar& at);
 
     // Constructors
@@ -305,7 +304,6 @@ _CORBA_MODULE_BEG
     virtual ::CORBA::Boolean cadastrarAtividade(const ::ComplementaresApp::AtividadeComplementar& at) = 0;
     virtual ::CORBA::Long contarHorasCadastradas(::CORBA::Long RA) = 0;
     virtual AtividadesComplementares* atividadesCadastradas(::CORBA::Long RA) = 0;
-    virtual void removerTodas() = 0;
     virtual ::CORBA::Boolean removerAtividade(const ::ComplementaresApp::AtividadeComplementar& at) = 0;
     
   public:  // Really protected, workaround for xlC

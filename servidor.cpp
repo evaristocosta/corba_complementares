@@ -6,7 +6,7 @@
 
 using namespace std;
 
-int main(int argc, char const **argv)
+int main(int argc, char *argv[])
 {
     //Inicialização do objeto ORB
     CORBA::ORB_var orb = CORBA::ORB_init(argc, argv);
@@ -19,7 +19,7 @@ int main(int argc, char const **argv)
     PortableServer::POAManager_var mgr = poa->the_POAManager();
 
     // Objeto servente na linguagem nativa do sistema
-    complementares_impl *servente = new complementares_impl();
+    Complementares_impl *servente = new Complementares_impl();
 
     // Criar objeto CORBA correspondente ao servente
     CORBA::Object_var servente_obj =
@@ -43,7 +43,7 @@ int main(int argc, char const **argv)
     // Preparando a estrutura usada na vinculação de serviço
     CosNaming::Name name;
     name.length(1);
-    name[0].id = CORBA::string_dup("Complementares");
+    name[0].id = CORBA::string_dup("ComplementaresLucas");
     name[0].kind = CORBA::string_dup("");
 
     cout << "Vinculando o serviço" << endl;
