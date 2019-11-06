@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
 
         CosNaming::Name name;
         name.length(1);
-        name[0].id = CORBA::string_dup("Complementares");
+        name[0].id = CORBA::string_dup("DepositoAtividades");
         name[0].kind = CORBA::string_dup("");
 
         ::CORBA::Object_ptr obj_remoto_corba = nc->resolve(name);
@@ -117,7 +117,9 @@ int main(int argc, char** argv) {
             }
             case 4: {
                 int certeza = 0;
-                cout << "Tem certeza que deseja realizar esta operacao? (S = 1; N = 0)";
+                cout << "Tem certeza que deseja realizar esta operacao?" << endl;
+                cout << "1 - Sim" << endl;
+                cout << "0 - Nao" << endl;
                 cin >> certeza;
 
                 if (certeza) {

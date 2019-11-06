@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
 
     CosNaming::Name name;
     name.length(1);
-    name[0].id = CORBA::string_dup("Complementares");
+    name[0].id = CORBA::string_dup("DepositoAtividades");
     name[0].kind = CORBA::string_dup("");
 
     cout << "Vinculando o serviço" << endl;
