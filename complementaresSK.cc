@@ -382,11 +382,61 @@ ComplementaresApp::AtividadesComplementares* ComplementaresApp::_objref_Deposito
 
 
 //
+// Code for ComplementaresApp::DepositoAtividades::removerTodas
+
+// Proxy call descriptor class. Mangled signature:
+//  void
+class _0RL_cd_8dfcf7274d2061b7_60000000
+  : public omniCallDescriptor
+{
+public:
+  inline _0RL_cd_8dfcf7274d2061b7_60000000(LocalCallFn lcfn, const char* op_, size_t oplen, _CORBA_Boolean upcall=0)
+    : omniCallDescriptor(lcfn, op_, oplen, 0, _user_exns, 0, upcall)
+  {
+    
+  }
+  
+  
+    
+  
+  static const char* const _user_exns[];
+
+  
+};
+
+const char* const _0RL_cd_8dfcf7274d2061b7_60000000::_user_exns[] = {
+  0
+};
+
+// Local call call-back function.
+static void
+_0RL_lcfn_8dfcf7274d2061b7_70000000(omniCallDescriptor*, omniServant* svnt)
+{
+  
+  ComplementaresApp::_impl_DepositoAtividades* impl = (ComplementaresApp::_impl_DepositoAtividades*) svnt->_ptrToInterface(ComplementaresApp::DepositoAtividades::_PD_repoId);
+  impl->removerTodas();
+
+
+}
+
+void ComplementaresApp::_objref_DepositoAtividades::removerTodas()
+{
+  _0RL_cd_8dfcf7274d2061b7_60000000 _call_desc(_0RL_lcfn_8dfcf7274d2061b7_70000000, "removerTodas", 13);
+
+
+  _invoke(_call_desc);
+
+
+
+}
+
+
+//
 // Code for ComplementaresApp::DepositoAtividades::removerAtividade
 
 // Local call call-back function.
 static void
-_0RL_lcfn_8dfcf7274d2061b7_60000000(omniCallDescriptor* cd, omniServant* svnt)
+_0RL_lcfn_8dfcf7274d2061b7_80000000(omniCallDescriptor* cd, omniServant* svnt)
 {
   _0RL_cd_8dfcf7274d2061b7_00000000* tcd = (_0RL_cd_8dfcf7274d2061b7_00000000*)cd;
   ComplementaresApp::_impl_DepositoAtividades* impl = (ComplementaresApp::_impl_DepositoAtividades*) svnt->_ptrToInterface(ComplementaresApp::DepositoAtividades::_PD_repoId);
@@ -397,7 +447,7 @@ _0RL_lcfn_8dfcf7274d2061b7_60000000(omniCallDescriptor* cd, omniServant* svnt)
 
 ::CORBA::Boolean ComplementaresApp::_objref_DepositoAtividades::removerAtividade(const ::ComplementaresApp::AtividadeComplementar& at)
 {
-  _0RL_cd_8dfcf7274d2061b7_00000000 _call_desc(_0RL_lcfn_8dfcf7274d2061b7_60000000, "removerAtividade", 17);
+  _0RL_cd_8dfcf7274d2061b7_00000000 _call_desc(_0RL_lcfn_8dfcf7274d2061b7_80000000, "removerAtividade", 17);
   _call_desc.arg_0 = &(::ComplementaresApp::AtividadeComplementar&) at;
 
   _invoke(_call_desc);
@@ -459,9 +509,17 @@ ComplementaresApp::_impl_DepositoAtividades::_dispatch(omniCallHandle& _handle)
     return 1;
   }
 
+  if (omni::strMatch(op, "removerTodas")) {
+
+    _0RL_cd_8dfcf7274d2061b7_60000000 _call_desc(_0RL_lcfn_8dfcf7274d2061b7_70000000, "removerTodas", 13, 1);
+    
+    _handle.upcall(this,_call_desc);
+    return 1;
+  }
+
   if (omni::strMatch(op, "removerAtividade")) {
 
-    _0RL_cd_8dfcf7274d2061b7_00000000 _call_desc(_0RL_lcfn_8dfcf7274d2061b7_60000000, "removerAtividade", 17, 1);
+    _0RL_cd_8dfcf7274d2061b7_00000000 _call_desc(_0RL_lcfn_8dfcf7274d2061b7_80000000, "removerAtividade", 17, 1);
     
     _handle.upcall(this,_call_desc);
     return 1;
