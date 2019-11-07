@@ -1,5 +1,6 @@
 #include <omniORB4/CORBA.h>
 #include <iostream>
+#include <limits>
 #include <string>
 #include "complementares.hh"
 
@@ -24,7 +25,7 @@ int main(int argc, char** argv) {
 
         CosNaming::Name name;
         name.length(1);
-        name[0].id = CORBA::string_dup("DepositoAtividades");
+        name[0].id = CORBA::string_dup("ComplementaresLucas");
         name[0].kind = CORBA::string_dup("");
 
         ::CORBA::Object_ptr obj_remoto_corba = nc->resolve(name);
@@ -46,9 +47,16 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
+    cout << "-------- SISTEMA DE GERENCIAMENTO DE ATIVIDADES COMPLEMENTARES "
+            "-------- "
+         << endl << endl;
+
+    string descricao, url;
+    long RA, numeroHoras;
+
     int opcao = 0;
     do {
-        cout << "Escolha: " << endl;
+        cout << "Escolha uma opcao: " << endl;
         cout << "1 - Cadastrar atividade" << endl;
         cout << "2 - Contar horas cadastradas" << endl;
         cout << "3 - Atividades de um aluno" << endl;
@@ -59,111 +67,147 @@ int main(int argc, char** argv) {
         cout << "Opção: ";
         cin >> opcao;
 
-        switch (opcao) {
-            case 1: {
-                ComplementaresApp::AtividadeComplementar* ac =
-                    new ComplementaresApp::AtividadeComplementar();
-                string descricao, url;
+        // reaproveitamento de variaveis
+        descricao = "";
+        url = "";
+        RA = 0;
+        numeroHoras = 0;
 
-                cout << "RA do aluno: ";
-                cin >> ac->RA;
+        if (!isdigit(opcao)) {
+            switch (opcao) {
+                case 1: {
+                    ComplementaresApp::AtividadeComplementar* ac =
+                        new ComplementaresApp::AtividadeComplementar();
 
-                cout << "Descricao da atividade: ";
-                cin >> descricao;
-                ac->descricao = ::CORBA::string_dup(descricao.c_str());
+                    cout << "-------- CADASTRO DE ATIVIDADE --------" << endl;
+                    cout << "RA do aluno: ";
+                    cin >> RA;
 
-                cout << "Quantidade de horas: ";
-                cin >> ac->numeroHoras;
+                    cout << "Descricao da atividade: ";
+                    cin >> descricao;
 
-                cout << "URL do certificado: ";
-                cin >> url;
-                ac->urlCertificado = ::CORBA::string_dup(url.c_str());
+                    cout << "Quantidade de horas: ";
+                    cin >> numeroHoras;
 
-                ac->categoria = tiposAtividade();
+                    cout << "URL do certificado: ";
+                    cin >> url;
 
-                proxy_obj_remoto->cadastrarAtividade(*ac);
+                    ac->categoria = tiposAtividade();
+                    ac->RA = RA;
+                    ac->descricao = ::CORBA::string_dup(descricao.c_str());
+                    ac->numeroHoras = numeroHoras;
+                    ac->urlCertificado = ::CORBA::string_dup(url.c_str());
 
-                break;
-            }
-            case 2: {
-                long ra;
+                    if (proxy_obj_remoto->cadastrarAtividade(*ac)) {
+                        cout << "Atividade cadastrada com sucesso!" << endl;
+                        cout << "------------------------" << endl << endl;
+                    } else {
+                        cout << "Limite de armazenamento atingido!" << endl;
+                        cout << "------------------------" << endl << endl;
+                    }
 
-                cout << "Digite o RA para consulta de horas: ";
-                cin >> ra;
+                    break;
+                }
+                case 2: {
+                    cout << "-------- CONTAGEM DE HORAS --------" << endl;
+                    cout << "Digite o RA para consulta de horas: ";
+                    cin >> RA;
 
-                long total = proxy_obj_remoto->contarHorasCadastradas(ra);
+                    long total = proxy_obj_remoto->contarHorasCadastradas(RA);
 
-                if (total) {
-                    cout << "Total de horas deste aluno: " << total << endl;
-                } else {
-                    cout << "Nao existem horas cadastradas para este aluno."
+                    if (total) {
+                        cout << "Total de horas deste aluno: " << total << "h" << endl;
+                        cout << "------------------------" << endl << endl;
+                    } else {
+                        cout << "Nao existem horas cadastradas para este aluno."
+                             << endl;
+                        cout << "------------------------" << endl << endl;
+                    }
+
+                    break;
+                }
+                case 3: {
+                    cout << "-------- ATIVIDADES DO ALUNO --------" << endl;
+                    cout << "Digite o RA para consulta de atividades: ";
+                    cin >> RA;
+
+                    ::ComplementaresApp::AtividadesComplementares*
+                        listaRetorno =
+                            proxy_obj_remoto->atividadesCadastradas(RA);
+
+                    printListaComplementares(listaRetorno);
+
+                    break;
+                }
+                case 4: {
+                    cout << "-------- LIBERAR ARMAZENAMENTO --------" << endl;
+                    int certeza = 0;
+                    cout << "Tem certeza que deseja realizar esta operacao?"
                          << endl;
+                    cout << "1 - Sim" << endl;
+                    cout << "0 - Nao" << endl;
+                    cin >> certeza;
+
+                    if (certeza == 1) {
+                        proxy_obj_remoto->removerTodas();
+                        cout << "Armazenamento limpo!" << endl;
+                        cout << "------------------------" << endl << endl;
+                    } else if (certeza != 0) {
+                        cout << "Opcao invalida!" << endl;
+                        cout << "------------------------" << endl << endl;
+                    }
+
+                    break;
                 }
+                case 5: {
+                    ComplementaresApp::AtividadeComplementar* ac =
+                        new ComplementaresApp::AtividadeComplementar();
 
-                break;
-            }
-            case 3: {
-                long ra;
+                    cout << "-------- REMOCAO DE ATIVIDADE --------" << endl;
+                    cout << "RA do aluno a ser removido: ";
+                    cin >> RA;
 
-                cout << "Digite o RA para consulta de atividades: ";
-                cin >> ra;
+                    cout << "Descricao da atividade: ";
+                    cin >> descricao;
 
-                ::ComplementaresApp::AtividadesComplementares* listaRetorno =
-                    proxy_obj_remoto->atividadesCadastradas(ra);
+                    cout << "Quantidade de horas: ";
+                    cin >> numeroHoras;
 
-                printListaComplementares(listaRetorno);
+                    cout << "URL do certificado: ";
+                    cin >> url;
 
-                break;
-            }
-            case 4: {
-                int certeza = 0;
-                cout << "Tem certeza que deseja realizar esta operacao?" << endl;
-                cout << "1 - Sim" << endl;
-                cout << "0 - Nao" << endl;
-                cin >> certeza;
+                    ac->categoria = tiposAtividade();
+                    ac->RA = RA;
+                    ac->descricao = ::CORBA::string_dup(descricao.c_str());
+                    ac->numeroHoras = numeroHoras;
+                    ac->urlCertificado = ::CORBA::string_dup(url.c_str());
 
-                if (certeza) {
-                    proxy_obj_remoto->removerTodas();
+                    if (proxy_obj_remoto->removerAtividade(*ac)) {
+                        cout << "Atividade removida com sucesso." << endl;
+                        cout << "------------------------" << endl << endl;
+                    } else {
+                        cout << "Nao foi possivel encontrar esta atividade"
+                             << endl;
+                        cout << "------------------------" << endl << endl;
+                    }
+                    break;
                 }
+                case 6:
+                    cout << "Terminando..." << endl;
+                    break;
 
-                break;
+                default:
+                    cout << "Operacao invalida" << endl;
+                    cout << "------------------------" << endl << endl;
             }
-            case 5: {
-                ComplementaresApp::AtividadeComplementar* ac =
-                    new ComplementaresApp::AtividadeComplementar();
-                string descricao, url;
-
-                cout << "RA do aluno: ";
-                cin >> ac->RA;
-
-                cout << "Descricao da atividade: ";
-                cin >> descricao;
-                ac->descricao = ::CORBA::string_dup(descricao.c_str());
-
-                cout << "Quantidade de horas: ";
-                cin >> ac->numeroHoras;
-
-                cout << "URL do certificado: ";
-                cin >> url;
-                ac->urlCertificado = ::CORBA::string_dup(url.c_str());
-
-                ac->categoria = tiposAtividade();
-
-                if(proxy_obj_remoto->removerAtividade(*ac)) {
-                    cout << "Atividade removida com sucesso." << endl;
-                } else {
-                    cout << "Nao foi possivel encontrar esta atividade" << endl;
-                }
-
-                break;
-            }
-            case 6:
-                cout << "Terminando..." << endl;
-                break;
-
-            default:
-                cout << "Operacao invalida" << endl;
+        } else {
+            cout << "Selecione uma opcao valida!" << endl;
+            cout << "------------------------" << endl << endl;
         }
+
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
     } while (opcao != 6);
 
     orb->destroy();
@@ -197,14 +241,19 @@ ComplementaresApp::CategoriaComplementares tiposAtividade() {
                 return ComplementaresApp::externa;
                 break;
             default:
-                cout << "Opcao invalida, escolha outra!" << endl << endl;
+                cout << "Opcao invalida, escolha outra!" << endl;
+                cout << "------------------------" << endl << endl;
         }
+
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
 }
 
 void printListaComplementares(
     ComplementaresApp::AtividadesComplementares* listaComplementares) {
     if (listaComplementares->length() > 0) {
+        cout << "========================" << endl;
         cout << " Atividades do aluno " << (*listaComplementares)[0].RA << endl
              << endl;
     }
@@ -232,6 +281,6 @@ void printListaComplementares(
                 cout << "Tipo: desconhecido" << endl;
                 break;
         }
-        cout << endl;
+        cout << "========================" << endl << endl;
     }
 }

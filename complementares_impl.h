@@ -81,11 +81,10 @@ inline ::CORBA::Boolean Complementares_impl::removerAtividade(
     int i;
 
     for (i = 0; i < qtdeAtividades; i++) {
-        if (atividadeBuscada.RA == (*listaAtividades)[i].RA ||
-            (atividadeBuscada.numeroHoras ==
-             (*listaAtividades)[i].numeroHoras) ||
-            (descricao.compare((*listaAtividades)[i].descricao)) ||
-            (url.compare((*listaAtividades)[i].urlCertificado)) ||
+        if (atividadeBuscada.RA == (*listaAtividades)[i].RA &&
+            (atividadeBuscada.numeroHoras == (*listaAtividades)[i].numeroHoras) &&
+            (descricao.compare((*listaAtividades)[i].descricao)) &&
+            (url.compare((*listaAtividades)[i].urlCertificado)) &&
             (atividadeBuscada.categoria == (*listaAtividades)[i].categoria)) {
             break;
         }
